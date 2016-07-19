@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GreetUpModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Events">
+          <Key>
+            <PropertyRef Name="EventsID" />
+          </Key>
+          <Property Name="EventsID" Type="int" Nullable="false" />
+          <Property Name="EventName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RsvpID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RSVP">
+          <Key>
+            <PropertyRef Name="RsvpID" />
+          </Key>
+          <Property Name="RsvpID" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Events_RSVP">
+          <End Role="RSVP" Type="Self.RSVP" Multiplicity="1" />
+          <End Role="Events" Type="Self.Events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RSVP">
+              <PropertyRef Name="RsvpID" />
+            </Principal>
+            <Dependent Role="Events">
+              <PropertyRef Name="RsvpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GreetUpModelStoreContainer">
+          <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RSVP" EntityType="Self.RSVP" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Events_RSVP" Association="Self.FK_Events_RSVP">
+            <End Role="RSVP" EntitySet="RSVP" />
+            <End Role="Events" EntitySet="Events" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GreetUpModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventsID" />
+          </Key>
+          <Property Name="EventsID" Type="Int32" Nullable="false" />
+          <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RsvpID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RSVP" Relationship="Self.FK_Events_RSVP" FromRole="Events" ToRole="RSVP" />
+        </EntityType>
+        <EntityType Name="RSVP">
+          <Key>
+            <PropertyRef Name="RsvpID" />
+          </Key>
+          <Property Name="RsvpID" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Events" Relationship="Self.FK_Events_RSVP" FromRole="RSVP" ToRole="Events" />
+        </EntityType>
+        <Association Name="FK_Events_RSVP">
+          <End Role="RSVP" Type="Self.RSVP" Multiplicity="1" />
+          <End Role="Events" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RSVP">
+              <PropertyRef Name="RsvpID" />
+            </Principal>
+            <Dependent Role="Events">
+              <PropertyRef Name="RsvpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GreetUpEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Events" EntityType="Self.Event" />
+          <EntitySet Name="RSVPs" EntityType="Self.RSVP" />
+          <AssociationSet Name="FK_Events_RSVP" Association="Self.FK_Events_RSVP">
+            <End Role="RSVP" EntitySet="RSVPs" />
+            <End Role="Events" EntitySet="Events" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GreetUpModelStoreContainer" CdmEntityContainer="GreetUpEntities">
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="GreetUpModel.Event">
+              <MappingFragment StoreEntitySet="Events">
+                <ScalarProperty Name="EventsID" ColumnName="EventsID" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="RsvpID" ColumnName="RsvpID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RSVPs">
+            <EntityTypeMapping TypeName="GreetUpModel.RSVP">
+              <MappingFragment StoreEntitySet="RSVP">
+                <ScalarProperty Name="RsvpID" ColumnName="RsvpID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
